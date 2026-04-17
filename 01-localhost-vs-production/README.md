@@ -70,3 +70,27 @@ python app.py
 1. Điều gì xảy ra nếu bạn push code với API key hardcode lên GitHub public?
 2. Tại sao stateless quan trọng khi scale?
 3. 12-factor nói "dev/prod parity" — nghĩa là gì trong thực tế?
+
+
+## Câu trả lời 
+
+1. Hardcoded API key in source code
+   → Security risk: nếu push lên GitHub public, hacker có thể lấy key và sử dụng API, gây mất tiền.
+
+2. Fixed port (hardcoded port 8000)
+   → Not flexible: cloud platforms thường set port qua environment variable.
+
+3. Debug mode enabled permanently
+   → Security risk: debug mode có thể leak internal information.
+
+4. No health check endpoint
+   → Monitoring systems không biết service còn sống hay không.
+
+5. No graceful shutdown (SIGTERM handling)
+   → Khi container stop, requests đang chạy có thể bị mất.
+
+6. Configuration not loaded from environment variables
+   → Không thể thay đổi config giữa dev và production.
+
+7. Using print() instead of structured logging
+   → Khó debug và monitor trong production.
