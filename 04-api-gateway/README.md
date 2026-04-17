@@ -89,3 +89,16 @@ Request
 1. Khi nào nên dùng API Key vs JWT vs OAuth2?
 2. Rate limit nên đặt bao nhiêu request/phút cho một AI agent?
 3. Nếu API key bị lộ, bạn phát hiện và xử lý như thế nào?
+
+## Trả lời câu hỏi thảo luận 
+1. Khi nào nên dùng API Key vs JWT vs OAuth2?
+
+API Key phù hợp cho server-to-server communication, internal services, hoặc khi cần authentication đơn giản và nhanh. JWT tốt hơn khi cần stateless authentication với user context (user_id, roles, permissions) và có thể expire tự động, thích hợp cho web/mobile apps với nhiều users. OAuth2 dành cho trường hợp cần delegate access (ví dụ "Login with Google"), khi app cần truy cập resources của user từ third-party service, hoặc khi build public API cho developers bên ngoài integrate.
+
+2. Rate limit nên đặt bao nhiêu request/phút cho một AI agent?
+
+Phụ thuộc vào use case nhưng thường 10-20 requests/phút cho free tier, 60-100 requests/phút cho paid users là hợp lý. Cần tính đến response time của agent (thường 2-10 giây), chi phí LLM API (mỗi request có thể tốn $0.01-0.1), và khả năng xử lý của infrastructure. Nên implement tiered limits: free users 5-10 req/min, basic plan 30 req/min, premium 100+ req/min, và có burst allowance (cho phép vượt ngắn hạn nhưng throttle sau đó).
+
+3. Nếu API key bị lộ, bạn phát hiện và xử lý như thế nào?
+
+Ngay lập tức revoke key đó trong database và generate key mới cho user hợp lệ. Audit logs để xem key bị lộ đã được dùng như thế nào (IP addresses, requests made, data accessed). Notify user qua email về security incident và hướng dẫn rotate key. Implement monitoring để detect suspicious patterns (requests từ nhiều IPs khác nhau, traffic spike bất thường, geographic anomalies). Nếu có thiệt hại, assess impact và có thể cần reset toàn bộ keys trong hệ thống. Long-term thì nên thêm IP whitelisting, request signing, hoặc chuyển sang JWT với short expiration để giảm blast radius khi bị compromise.
