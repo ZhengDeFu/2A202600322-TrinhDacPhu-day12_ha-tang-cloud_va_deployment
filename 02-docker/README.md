@@ -101,3 +101,60 @@ COPY --from=builder ...        # copy chỉ /site-packages
 1. Tại sao `COPY requirements.txt .` rồi `RUN pip install` TRƯỚC khi `COPY . .`?
 2. `.dockerignore` nên chứa những gì? Tại sao `venv/` và `.env` quan trọng?
 3. Nếu agent cần đọc file từ disk, làm sao mount volume vào container?
+
+
+## Trả lời câu hỏi thảo luận
+
+1. Base image là gì?
+
+Base image là image nền được dùng để tạo container.
+Trong ví dụ này, base image thường là:
+
+python:3.11   (basic version)
+python:3.11-slim   (production version)
+
+Nó chứa Python runtime và hệ điều hành cần thiết
+để chạy ứng dụng.
+
+
+2. Working directory là gì?
+
+Working directory là thư mục bên trong container
+nơi ứng dụng được chạy.
+
+Ví dụ:
+
+WORKDIR /app
+
+Điều này có nghĩa tất cả file sẽ được copy vào /app
+và các lệnh sau đó sẽ chạy trong thư mục này.
+
+
+3. Tại sao COPY requirements.txt trước?
+
+COPY requirements.txt trước giúp Docker cache layer
+khi cài dependencies.
+
+Nếu code thay đổi nhưng requirements.txt không đổi,
+Docker sẽ không cần cài lại dependencies,
+giúp build nhanh hơn nhiều.
+
+
+4. CMD vs ENTRYPOINT khác nhau thế nào?
+
+CMD:
+- Lệnh mặc định khi container chạy
+- Có thể override khi run container
+
+ENTRYPOINT:
+- Lệnh chính của container
+- Khó override hơn
+- Thường dùng cho executable container
+
+Ví dụ:
+
+CMD ["python", "app.py"]
+
+ENTRYPOINT ["python"]
+
+CMD ["app.py"]
