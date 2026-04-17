@@ -1,5 +1,13 @@
 # Day 12 — Deployment: Đưa Agent Lên Cloud
 
+## 06-lab-complete
+
+### Đây là link url sau khi đã thực hiện folder 06-lab-complelte
+
+omplete$ railway domain
+Service Domain created:
+🚀 https://trinhdacphu-2a202600322-day12-production.up.railway.app
+
 > **AICB-P1 · VinUniversity 2026**  
 > Repository thực hành đi kèm bài giảng Day 12.  
 > Mỗi phần có ví dụ **cơ bản** (hiểu concept) và **chuyên sâu** (production-ready).
